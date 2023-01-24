@@ -61,14 +61,7 @@ class SelectLocationFragment : BaseFragment() {
             onMapReadyCallBack()
         })
 
-//        TODO: add the map setup implementation
-//        TODO: zoom to the user location after taking his permission
-//        TODO: add style to the map
-//        TODO: put a marker to location that the user selected
 
-
-//        TODO: call this function after the user confirms on the selected location
-        //onLocationSelected()
 
         return binding.root
     }
@@ -81,7 +74,22 @@ class SelectLocationFragment : BaseFragment() {
 
         enableMyLocation()
         setPOIClick()
+        setLongClick()
         setMapStyle(googleMap)
+
+    }
+
+    private fun setLongClick() {
+        googleMap.setOnMapLongClickListener{
+            val poi= PointOfInterest(it, getString(R.string.dropped_pin),getString(R.string.dropped_pin))
+            _viewModel.reminderSelectedLocationStr.value = getString(R.string.dropped_pin)
+            _viewModel.latitude.value=it.latitude
+            _viewModel.longitude.value=it.longitude
+            _viewModel.selectedPOI.value=poi
+
+            _viewModel.navigationCommand.value=NavigationCommand.Back
+            //   getFragmentManager()?.popBackStack()
+        }
 
     }
 
@@ -157,7 +165,6 @@ class SelectLocationFragment : BaseFragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        // TODO: Change the map type based on the user's selection.
         R.id.normal_map -> {
             googleMap.mapType = GoogleMap.MAP_TYPE_NORMAL
             true

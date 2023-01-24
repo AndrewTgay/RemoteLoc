@@ -4,13 +4,16 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
+import org.hamcrest.MatcherAssert.assertThat
 import com.udacity.project4.locationreminders.MainCoroutineRule
 import com.udacity.project4.locationreminders.data.FakeDataSource
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.locationreminders.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
+import org.hamcrest.CoreMatchers.`is`
 import org.junit.*
+import org.junit.Assert.assertEquals
 import org.junit.runner.RunWith
 import org.koin.core.context.stopKoin
 
@@ -18,7 +21,6 @@ import org.koin.core.context.stopKoin
 @ExperimentalCoroutinesApi
 class RemindersListViewModelTest {
 
-    //TODO: provide testing to the RemindersListViewModel and its live data objects
     private lateinit var remindersListViewModel: RemindersListViewModel
 
     private lateinit var data: FakeDataSource
@@ -32,7 +34,7 @@ class RemindersListViewModelTest {
 
     @Before
     fun setupViewModel() = runBlockingTest {
-        //stopKoin()
+        stopKoin()
         data = FakeDataSource()
         val reminder1 = ReminderDTO("Tit1", "Desc1", "location1", 1.1, 1.1)
         val reminder2 = ReminderDTO("Tit2", "Desc2", "location2", 2.2, 2.2)
@@ -47,14 +49,10 @@ class RemindersListViewModelTest {
 
     @After
     fun atTheEnd() = runBlockingTest{
-        //stopKoin()
+        stopKoin()
         data.deleteAllReminders()
     }
 
-    @Test
-    fun     loadReminders_showLoading_valueIsTrues() {
-        Assert.assertEquals(4,2+2)
-    }
 
     @Test
     fun loadReminders_showLoading_valueIsTrue() {
@@ -64,10 +62,27 @@ class RemindersListViewModelTest {
 
         assertThat(remindersListViewModel.showLoading.getOrAwaitValue()).isTrue()
 
-      //  mainCoroutineRule.resumeDispatcher()
+        mainCoroutineRule.resumeDispatcher()
 
-     //   assertThat(remindersListViewModel.showLoading.getOrAwaitValue()).isFalse()
+        assertThat(remindersListViewModel.showLoading.getOrAwaitValue()).isFalse()
+    }
 
+    @Test
+    fun loadReminders_fireEvent_valueIsTrue(){
+
+        //When
+        remindersListViewModel.loadReminders()
+
+        //Then
+        assertEquals(remindersListViewModel.remindersList.getOrAwaitValue(), emptyList<ReminderDataItem>())
+    }
+
+    @Test
+    fun invalidateShowNoData_aboutDataEvent_valueIsTrue(){
+        //When
+        remindersListViewModel.showNoData.value = false
+        //then
+        assertEquals(remindersListViewModel.showNoData.getOrAwaitValue(), false)
     }
 
 }
