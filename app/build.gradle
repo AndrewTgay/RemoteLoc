@@ -61,8 +61,6 @@ dependencies {
     //Navigation dependencies
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-rc1'
-    implementation project(path: ':app')
-    testImplementation project(path: ':app')
     androidTestImplementation project(path: ':app')
     androidTestImplementation project(path: ':app')
     androidTestImplementation project(path: ':app')

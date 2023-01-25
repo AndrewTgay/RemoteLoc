@@ -2,7 +2,7 @@ package com.udacity.project4.utils
 
 import androidx.test.espresso.idling.CountingIdlingResource
 
-object EspressoIdlingResource {
+object EspressoIdlingResourcee {
 
     private const val RESOURCE = "GLOBAL"
 
