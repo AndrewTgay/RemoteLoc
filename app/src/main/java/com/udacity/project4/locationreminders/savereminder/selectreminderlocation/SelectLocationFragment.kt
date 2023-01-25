@@ -32,6 +32,7 @@ import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
 import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
 import org.koin.android.ext.android.inject
 
+private const val PERMISSION_CODE_LOCATION_REQUEST=1
 class SelectLocationFragment : BaseFragment() {
 
     //Use Koin to get the view model of the SaveReminder
@@ -116,21 +117,28 @@ class SelectLocationFragment : BaseFragment() {
     ) {
         if (requestCode == REQUEST_LOCATION_PERMISSION) {
             if (grantResults.size > 0 && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                _viewModel.showErrorMessage.value = "Permission is activated"
                 enableMyLocation()
             }
+            else{
+                _viewModel.showErrorMessage.value=getString(R.string.permission_denied_explanation)
+            }
+        }
+        else{
+            _viewModel.showToast.value=R.string.permission_denied_explanation.toString()
+            _viewModel.showErrorMessage.value = R.string.permission_denied_explanation.toString()
         }
     }
 
     @SuppressLint("MissingPermission")
     private fun enableMyLocation() {
         if (isPermissionGranted()) {
-            googleMap.setMyLocationEnabled(true)
+            googleMap.isMyLocationEnabled=true
         } else {
-            ActivityCompat.requestPermissions(
-                requireActivity(),
+            this.requestPermissions(
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                REQUEST_LOCATION_PERMISSION
-            )
+                PERMISSION_CODE_LOCATION_REQUEST)
+
         }
     }
 

@@ -1,4 +1,4 @@
-package com.udacity.project4
+package com.udacity.project4.utils
 
 import androidx.test.espresso.idling.CountingIdlingResource
 
@@ -22,11 +22,11 @@ object EspressoIdlingResource {
     inline fun <T> wrapEspressoIdlingResource(function: () -> T): T {
         // Espresso does not work well with coroutines yet. See
         // https://github.com/Kotlin/kotlinx.coroutines/issues/982
-        increment() // Set app as busy.
+        EspressoIdlingResource.increment() // Set app as busy.
         return try {
             function()
         } finally {
-            decrement() // Set app as idle.
+            EspressoIdlingResource.decrement() // Set app as idle.
         }
     }
 }
