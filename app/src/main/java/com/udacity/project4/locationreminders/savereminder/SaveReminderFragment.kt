@@ -220,7 +220,6 @@ class SaveReminderFragment : BaseFragment() {
         }
         locationSettingsResponseTask.addOnCompleteListener {
             if (it.isSuccessful) {
-                _viewModel.showToast.value= "Location is opened now"
                 addGeofence(reminderDataItem)
                 _viewModel.saveReminder(reminderDataItem)
 
